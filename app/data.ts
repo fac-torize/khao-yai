@@ -29,7 +29,7 @@ export const places: Place[] = [
     source: "https://www.kirimaya.com/resorts/atta/",
     credit: "Kirimaya · เว็บไซต์โรงแรม",
     image: "atta",
-    map: "https://goo.gl/maps/2rZG8nZiC6kghS5E8",
+    map: "https://www.google.com/maps/search/?api=1&query=atta+Lakeside+Resort+Suite+Khao+Yai",
     query: "atta Lakeside Resort Suite Khao Yai",
     note: "เวลาโรงแรมจากเว็บทางการ; เงื่อนไขการจองของคุณอาจต่างกัน",
   },

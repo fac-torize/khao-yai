@@ -1,3 +1,6 @@
 # Visual direction
 Warm travel desk: forest green ink, ivory paper, restrained burnt orange for active day, full photographic venue imagery. Operate mode: a day selector controls an itinerary ledger next to a weather and map reference rail. On mobile the day strip remains horizontally accessible and the rail flows below. References are always adjacent to factual descriptions. Proposed times are distinct from factual venue hours.
 Direction candidate 4 of the considered set (travel journal, resort concierge, trail guide, warm travel desk, postcard album, roadbook, dining directory). Split-flap and terminal signage donated legibility and stable time columns; high-density web donated compact secondary metadata. No generated scene imagery. Working direction disclosed through optional structured question; no response received before proceeding. Do not store unanswered aesthetic choices as permanent user preferences.
+
+
+The trip now leads with a full-width geographic overview showing all days, color filters and a stop ledger. Labels may be displaced with leaders while their coordinate anchors remain exact. Photography occupies the full itinerary row, with three distinct source photos and an accessible full-size viewer. Preserve the original palette and factual uncertainty labels.

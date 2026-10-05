@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import VenueGallery from "./venue-gallery";
+const TripOverview = dynamic(() => import("./trip-overview"), {
+  ssr: false,
+  loading: () => (
+    <div className="overview-placeholder">กำลังเปิดแผนที่ภาพรวม…</div>
+  ),
+});
 import { days, places, getPlace, mapLink, type Place } from "./data";
 import snapshot from "./weather-snapshot.json";
 
@@ -426,6 +434,7 @@ export default function Home() {
             </a>
           </p>
         </div>
+        {(view === "plan" || view === "map") && <TripOverview />}
         {view === "plan" && (
           <div className="main-grid">
             <section className="itinerary">
@@ -547,8 +556,8 @@ export default function Home() {
                               </button>
                             </div>
                           </div>
-                          <div className="stop-image">
-                            <Photo place={p} />
+                          <div className="stop-gallery">
+                            <VenueGallery place={p} />
                           </div>
                           {expanded === key && <VenueInfo place={p} />}
                         </div>
@@ -648,8 +657,8 @@ export default function Home() {
             <div className="venue-grid">
               {listed.map((p) => (
                 <article className="venue" key={p.id}>
-                  <div className="venue-image">
-                    <Photo place={p} />
+                  <div className="venue-gallery-wrap">
+                    <VenueGallery place={p} />
                     <span className="venue-kind">
                       {p.kind === "food" ? "ร้านอาหาร" : "คาเฟ่"}
                     </span>

@@ -33,3 +33,9 @@ Google Maps and weather refresh require network access. Maps blocked by browser 
 ## Typography
 
 Noto Sans Thai, self-hosted from Google Fonts. SIL Open Font License; see `public/fonts/OFL.txt`.
+
+## Overview map and photo galleries
+
+The overview uses Leaflet with OpenStreetMap tiles and colors for each day. Marker labels show day.stop order; connectors indicate the suggested visit sequence, not road routing. Venue coordinates and evidence are recorded in `app/place-media.ts`. The atta coordinate was verified directly in Google Maps; the hotel's old short link points to Kirimaya instead. Saalow uses the shared The Creek campus marker, explicitly labeled; ambiguous Nam Pla Phrik remains unpinned. Mallorka appears as a day-two alternative.
+
+Each venue with reusable source imagery has three distinct photos, thumbnails, and a full-size keyboard-accessible gallery. Safari's additional pictures are drinks from its official website, labeled as such. Saalow still opens its author's original multi-photo gallery rather than copying prohibited images. Extra image origins remain in `public/places/image-origins.json`.
