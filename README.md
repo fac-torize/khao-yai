@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# เขาใหญ่, ไม่ต้องรีบ
 
-## Getting Started
+Thai itinerary for October 8–10, 2026, with atta Lakeside Resort as the base. Built with Next.js 16 and React 19.
 
-First, run the development server:
+## Run locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+```sh
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open the local URL printed by Next.js. Production: `bun run build` then `bun start`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Three daily itineraries with optional stops and space to rest.
+- All five restaurants and six cafés requested by the traveler.
+- Venue photos with original-source attribution. Saalow links to the original gallery because its author forbids unapproved image reuse.
+- Google Maps embedded per venue with external navigation links. Map searches should be checked before driving.
+- Open-Meteo regional forecast refreshed on page load; timestamped saved data when the weather request fails. Dates outside the forecast window show no data.
+- Search, venue filters, factual references, and printing.
 
-## Learn More
+## Data integrity
 
-To learn more about Next.js, take a look at the following resources:
+Sources checked October 5, 2026. `app/data.ts` keeps links alongside venue information. `public/places/image-origins.json` records original image URLs. Photos remain the property of their respective owners; attribution is not a general redistribution license.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Itinerary stop times are suggestions. Driving times of 2/14/23 minutes are user-provided, not verified routing results. The year and private-car travel are disclosed assumptions. Mallorka is a tentative match for “Mellorka”; two similarly named Nam Pla Phrik venues require traveler confirmation. Coppia opening times and access should be confirmed by phone.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Weather is for the Pak Chong area at the sourced Yung Khaow location (14.630809, 101.410794), not atta's exact position. Provider grid coordinates can differ. `app/weather-snapshot.json` is the timestamped response initially obtained from Open-Meteo. `/api/weather` refreshes it on demand without credentials and reports failure rather than fabricating data.
 
-## Deploy on Vercel
+Google Maps and weather refresh require network access. Maps blocked by browser privacy settings can still be opened using the external navigation links.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Typography
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Noto Sans Thai, self-hosted from Google Fonts. SIL Open Font License; see `public/fonts/OFL.txt`.
