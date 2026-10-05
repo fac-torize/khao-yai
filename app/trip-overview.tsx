@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, LayerGroup } from "leaflet";
-import { days, getPlace, mapLink } from "./data";
+import { getPlace, mapLink, type TripDay } from "./data";
 import { dayColors, positions } from "./place-media";
 
-export default function TripOverview() {
+export default function TripOverview({ days }: { days: TripDay[] }) {
   const [filter, setFilter] = useState(-1);
   const [ready, setReady] = useState(false);
   const [layoutVersion, setLayoutVersion] = useState(0);
@@ -238,7 +238,7 @@ export default function TripOverview() {
         .bindTooltip(title, { direction: "top", offset: [0, -17] })
         .addTo(group);
     });
-  }, [filter, ready, layoutVersion]);
+  }, [filter, ready, layoutVersion, days]);
   return (
     <section className="trip-overview" aria-label="แผนที่ภาพรวมสามวัน">
       <div className="overview-heading">

@@ -9,7 +9,8 @@ const TripOverview = dynamic(() => import("./trip-overview"), {
     <div className="overview-placeholder">กำลังเปิดแผนที่ภาพรวม…</div>
   ),
 });
-import { days, places, getPlace, mapLink, type Place } from "./data";
+import { days, places, getPlace, mapLink, getTripDays, type Place } from "./data";
+import { navigationLink, dayRouteLinks } from "./travel-links";
 import snapshot from "./weather-snapshot.json";
 
 function Icon({ name, size = 20 }: { name: string; size?: number }) {
@@ -275,7 +276,21 @@ export default function Home() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
-  const current = days[day];
+  const [rainy, setRainy] = useState(false);
+  const [compact, setCompact] = useState(false);
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("khao-yai-display-v1") || "{}");
+      if (typeof saved.rainy === "boolean") setRainy(saved.rainy);
+      if (typeof saved.compact === "boolean") setCompact(saved.compact);
+    } catch { /* Display controls still work if storage is unavailable. */ }
+  }, []);
+  function saveDisplay(nextRainy: boolean, nextCompact: boolean) {
+    try { localStorage.setItem("khao-yai-display-v1", JSON.stringify({ rainy: nextRainy, compact: nextCompact })); } catch {}
+  }
+  const tripDays = getTripDays(rainy);
+  const current = tripDays[day];
+  const routes = dayRouteLinks(current);
   const selectedPlace = getPlace(selected);
   const listed = places.filter(
     (p) =>
@@ -327,7 +342,7 @@ export default function Home() {
         </div>
         <a
           className="round-link"
-          href={mapLink(selectedPlace)}
+          href={navigationLink(selectedPlace)}
           target="_blank"
           rel="noreferrer"
           aria-label={`เปิดนำทางไป ${selectedPlace.name}`}
@@ -434,7 +449,38 @@ export default function Home() {
             </a>
           </p>
         </div>
-        {(view === "plan" || view === "map") && <TripOverview />}
+        {(view === "plan" || view === "map") && (
+          <>
+            <section className="trip-controls" aria-label="ตัวเลือกแพลนทริป">
+              <div className="control-group">
+                <span>แพลนวันที่ 9 ต.ค.</span>
+                <div className="segmented-control">
+                  {[false, true].map(value => (
+                    <button key={String(value)} aria-pressed={rainy === value}
+                      onClick={() => { setRainy(value); setExpanded(null); saveDisplay(value, compact); }}>
+                      <Icon name={value ? "rain" : "mountain"} size={17} />
+                      {value ? "แพลนฝนตก" : "เที่ยวอุทยาน"}
+                    </button>
+                  ))}
+                </div>
+                <small role="status">{rainy ? "Safari + ไทรสุกแทนอุทยาน · วันที่ 8 และ 10 ใช้แพลนเดิม" : "จุดชมวิว กม.30 + น้ำตกเหวสุวัต"}</small>
+              </div>
+              {view === "plan" && <div className="control-group">
+                <span>การแสดงแพลน</span>
+                <div className="segmented-control">
+                  {[false, true].map(value => (
+                    <button key={String(value)} aria-pressed={compact === value}
+                      onClick={() => { setCompact(value); saveDisplay(rainy, value); }}>
+                      {value ? "ดูแบบย่อ" : "ดูพร้อมรูป"}
+                    </button>
+                  ))}
+                </div>
+                <small>แบบย่อซ่อนรูป เปิดรายละเอียดแต่ละจุดได้</small>
+              </div>}
+            </section>
+            <TripOverview days={tripDays} />
+          </>
+        )}
         {view === "plan" && (
           <div className="main-grid">
             <section className="itinerary">
@@ -483,7 +529,7 @@ export default function Home() {
                 id="day-panel"
                 role="tabpanel"
                 aria-labelledby={`day-tab-${day}`}
-                className="day-content"
+                className={`day-content ${compact ? "compact-plan" : ""}`}
               >
                 <div className="day-title">
                   <h3>{current.title}</h3>
@@ -491,6 +537,14 @@ export default function Home() {
                     <Icon name="pin" size={15} />
                     {current.subtitle}
                   </p>
+                </div>
+                <div className="daily-routes" aria-label="เส้นทางขับรถตามแพลน">
+                  {routes.map(route => (
+                    <a key={route.url} href={route.url} target="_blank" rel="noreferrer" title={route.summary}>
+                      <Icon name="pin" size={17} />{route.label}<Icon name="external" size={14} />
+                    </a>
+                  ))}
+                  <small>ตามลำดับแวะที่เลือก รวมจุดเสริม · {routes.length > 1 ? "แบ่งสองช่วงให้เปิดบนมือถือได้ครบ · " : ""}{current.stops.some(s => s.id === "nampla") ? "น้ำปลาพริกยังไม่รวมเพราะรอยืนยันร้าน" : "เปิด Google Maps เพื่อดูเส้นทางขับรถ"}</small>
                 </div>
                 <div className="planning-note">
                   <span className="dot" />
@@ -500,7 +554,7 @@ export default function Home() {
                 <div className="timeline">
                   {current.stops.map((stop, i) => {
                     const p = getPlace(stop.id);
-                    const key = `${day}-${i}`;
+                    const key = `${day}-${rainy}-${stop.id}-${i}`;
                     return (
                       <article
                         className={`stop ${stop.optional ? "optional" : ""}`}
@@ -515,7 +569,9 @@ export default function Home() {
                                   ? "food"
                                   : p.kind === "stay"
                                     ? "bed"
-                                    : p.kind === "sight" ? "pin" : "coffee"
+                                    : p.kind === "sight"
+                                      ? "pin"
+                                      : "coffee"
                               }
                               size={15}
                             />
@@ -530,15 +586,19 @@ export default function Home() {
                               )}
                             </div>
                             <h4>{p.name}</h4>
-                            <p>{stop.text}</p>
+                            {(!compact || expanded === key) && <p>{stop.text}</p>}
                             <div className="stop-actions">
+                              <a className="navigate-stop" href={navigationLink(p)} target="_blank" rel="noreferrer"
+                                aria-label={`${p.id === "nampla" ? "ค้นหาร้าน" : "นำทางไป"} ${p.name}`}>
+                                <Icon name="arrow" size={15} />{p.id === "nampla" ? "ค้นหาร้าน" : "นำทาง"}
+                              </a>
                               <button
                                 aria-expanded={expanded === key}
                                 onClick={() =>
                                   setExpanded(expanded === key ? null : key)
                                 }
                               >
-                                ข้อมูลร้าน {expanded === key ? "−" : "+"}
+                                รายละเอียด {expanded === key ? "−" : "+"}
                               </button>
                               <button
                                 onClick={() => {
@@ -556,9 +616,9 @@ export default function Home() {
                               </button>
                             </div>
                           </div>
-                          <div className="stop-gallery">
+                          {!compact && <div className="stop-gallery">
                             <VenueGallery place={p} />
-                          </div>
+                          </div>}
                           {expanded === key && <VenueInfo place={p} />}
                         </div>
                       </article>
@@ -669,6 +729,9 @@ export default function Home() {
                     <h3>{p.name}</h3>
                     <p>{p.description}</p>
                     <VenueInfo place={p} />
+                    <a className="venue-navigation" href={navigationLink(p)} target="_blank" rel="noreferrer">
+                      <Icon name="arrow" size={16} />{p.id === "nampla" ? "ค้นหาร้านใน Google Maps" : `นำทางไป ${p.name}`}
+                    </a>
                     <button
                       className="map-venue"
                       onClick={() => {
@@ -857,7 +920,8 @@ export default function Home() {
             พัก atta Lakeside Resort · เวลาแวะเป็นข้อเสนอ · ปี 2026
             และรถส่วนตัวเป็นสมมติฐาน
           </p>
-          {days.map((d, i) => (
+          <p>วันที่ 9: {rainy ? "แพลนฝนตก · คาเฟ่" : "เที่ยวอุทยาน"}</p>
+          {tripDays.map((d, i) => (
             <section key={d.date}>
               <h2>
                 วันที่ {i + 1} · {d.date} ต.ค. — {d.title}

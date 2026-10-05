@@ -365,3 +365,20 @@ export const days = [
     ],
   },
 ];
+
+export type TripDay = (typeof days)[number];
+const rainyDays: TripDay[] = days.map((day, i) => i !== 1 ? day : ({
+  ...day,
+  title: "มัทฉะ ไอศกรีม และมื้อเย็นพิเศษ",
+  subtitle: "atta → Safari → ไทรสุก → ยุ้งข้าว → พัก → Midwinter",
+  note: "แพลนสำรองที่คุณเลือกเอง ไม่ได้สลับอัตโนมัติตามพยากรณ์ ตรวจสอบเวลาเปิดคาเฟ่ก่อนออก และโทรจองโต๊ะในร่มที่ Midwinter หากฝนตก เวลาทั้งหมดเป็นข้อเสนอ",
+  stops: [
+    day.stops[0],
+    { time: "09:30", id: "safari", label: "เริ่มวันด้วยมัทฉะ", text: "จิบชาที่ Safari Matcha Bar แทนการเข้าอุทยาน" },
+    { time: "10:45", id: "saisook", label: "ไอศกรีมกับเรื่องราวสัตว์ป่า", text: "แวะไทรสุกก่อนมื้อกลางวัน ตรวจสอบเวลาเปิดล่าสุดกับร้าน" },
+    { ...day.stops[3], time: "12:15" },
+    { ...day.stops[4], time: "14:00" },
+    day.stops[5],
+  ],
+}));
+export const getTripDays = (rainy: boolean): TripDay[] => rainy ? rainyDays : days;
