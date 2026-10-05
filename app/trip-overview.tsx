@@ -118,7 +118,7 @@ export default function TripOverview() {
         title: "Mallorka · ตัวเลือกสลับวันที่ 2",
       })
         .bindPopup(
-          "<strong>Mallorka Khaoyai</strong><p>ตัวเลือกสลับแทน Safari และไทรสุกในวันที่ 2</p>",
+          "<strong>Mallorka Khaoyai</strong><p>คาเฟ่สำรองแทนเที่ยวอุทยานในวันที่ 2 หากฝนหนักหรือพื้นที่ปิด</p>",
         )
         .addTo(group);
     }
@@ -334,7 +334,7 @@ export default function TripOverview() {
       <p className="overview-footnote">
         atta เป็นฐานทุกวัน · Saalow ใช้หมุดบริเวณเดียวกับจ้ำเข่า ·
         น้ำปลาพริกยังไม่ปักหมุดเพราะมีสองรายการชื่อคล้ายกัน · Mallorka
-        คือจุดสลับวันที่ 2
+        คือคาเฟ่สำรองวันที่ 2
       </p>
     </section>
   );

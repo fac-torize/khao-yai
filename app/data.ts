@@ -2,7 +2,7 @@ export type Place = {
   id: string;
   name: string;
   english: string;
-  kind: "cafe" | "food" | "stay";
+  kind: "cafe" | "food" | "stay" | "sight";
   area: string;
   description: string;
   hours: string;
@@ -32,6 +32,36 @@ export const places: Place[] = [
     map: "https://www.google.com/maps/search/?api=1&query=atta+Lakeside+Resort+Suite+Khao+Yai",
     query: "atta Lakeside Resort Suite Khao Yai",
     note: "เวลาโรงแรมจากเว็บทางการ; เงื่อนไขการจองของคุณอาจต่างกัน",
+  },
+  {
+    id: "viewpoint30",
+    name: "จุดชมวิว กม.30",
+    english: "Khao Yai’s northern panorama",
+    kind: "sight",
+    area: "อุทยานเขาใหญ่ · ถนนธนะรัชต์ กม.30",
+    description: "จุดชมวิวแรกเมื่อเข้าจากฝั่งปากช่อง มองเห็นทิวเขาทางทิศเหนือ แวะก่อนเดินทางต่อไปน้ำตก",
+    hours: "ตรวจสอบการเปิดพื้นที่กับอุทยานก่อนเดินทาง",
+    source: "https://khaoyainationalpark.com/plan-your-visit/place-to-go",
+    credit: "ภาพและข้อมูล · อุทยานแห่งชาติเขาใหญ่",
+    image: "viewpoint30",
+    query: "จุดชมวิว กม.30 อุทยานแห่งชาติเขาใหญ่",
+    map: "https://www.google.com/maps/search/?api=1&query=14.47386971808361,101.39021683484316",
+    note: "อยู่ภายในด่านเก็บค่าบริการอุทยาน ดูอัตราล่าสุด: https://khaoyainationalpark.com/plan-your-visit/getting-here/park-entry-fees",
+  },
+  {
+    id: "haewsuwat",
+    name: "น้ำตกเหวสุวัต",
+    english: "Haew Suwat Waterfall",
+    kind: "sight",
+    area: "อุทยานแห่งชาติเขาใหญ่",
+    description: "น้ำตกสูงประมาณ 25 เมตร มีจุดชมวิวและทางเดินจากลานจอดรถประมาณ 100 เมตร อยู่ห่างศูนย์บริการนักท่องเที่ยวประมาณ 10 กิโลเมตร",
+    hours: "ตรวจสอบการเปิดพื้นที่กับอุทยานก่อนเดินทาง",
+    source: "https://khaoyainationalpark.com/plan-your-visit/place-to-go",
+    credit: "ภาพและข้อมูล · อุทยานแห่งชาติเขาใหญ่",
+    image: "haewsuwat",
+    query: "น้ำตกเหวสุวัต เขาใหญ่",
+    map: "https://www.google.com/maps/search/?api=1&query=Haew+Suwat+Waterfall+Khao+Yai",
+    note: "อุทยานไม่อนุญาตให้ลงเล่นน้ำ ฤดูฝนน้ำไหลแรง ให้ชมจากพื้นที่ที่เจ้าหน้าที่เปิด พิกัดบนแผนที่คือจุดน้ำตก ไม่ใช่ลานจอดรถ",
   },
   {
     id: "jumkhao",
@@ -133,7 +163,7 @@ export const places: Place[] = [
     kind: "cafe",
     area: "หมูสี · ธนะรัชต์ กม.18",
     description:
-      "มัทฉะบาร์ที่ได้แรงบันดาลใจจากวัฒนธรรมชาญี่ปุ่นและซาฟารี ไปต่อไทรสุกในช่วงเช้าเดียวกัน",
+      "มัทฉะบาร์ที่ได้แรงบันดาลใจจากวัฒนธรรมชาญี่ปุ่นและซาฟารี จับคู่ไทรสุกเป็นตัวเลือกแทนเที่ยวอุทยานเมื่อฝนตก",
     hours: "09:00–17:00 ทุกวัน ตาม Wongnai",
     source: "https://www.safarimatcha.com/",
     credit: "ภาพและข้อมูล · Safari Matcha เว็บไซต์ร้าน",
@@ -257,9 +287,9 @@ export const days = [
   {
     date: "9",
     day: "ศุกร์",
-    title: "มัทฉะ ไอศกรีม และมื้อเย็นพิเศษ",
-    subtitle: "หมูสี → ธนะรัชต์ → กลับมาพัก",
-    note: "พยากรณ์มีโอกาสฝน เลือกนั่งในร่ม และโทรจอง Midwinter ช่วงเย็น หากอยากไป Mallorka ให้สลับแทนสองคาเฟ่ช่วงเช้า",
+    title: "วิวภูเขา น้ำตก และมื้อเย็นพิเศษ",
+    subtitle: "atta → จุดชมวิว กม.30 → เหวสุวัต → ธนะรัชต์",
+    note: "เผื่อช่วงเช้าถึงบ่ายต้นสำหรับอุทยาน เวลาที่แสดงเป็นข้อเสนอ ไม่ใช่เวลาเดินทางที่ยืนยันแล้ว ตรวจสอบการเปิดพื้นที่ก่อนออก หากฝนหนักหรือพื้นที่ปิดให้เปลี่ยนเป็น Safari กับไทรสุก หรือ Mallorka และโทรจอง Midwinter ช่วงเย็น",
     stops: [
       {
         time: "08:00",
@@ -269,24 +299,24 @@ export const days = [
       },
       {
         time: "09:30",
-        id: "safari",
-        label: "เริ่มวันด้วยมัทฉะ",
-        text: "ค่อย ๆ จิบชา ก่อนแวะไอศกรีมต่อ",
+        id: "viewpoint30",
+        label: "รับวิวภูเขาที่ กม.30",
+        text: "ออกจาก atta หลังอาหารเช้า เข้าอุทยานทางฝั่งปากช่อง แล้วแวะชมวิว เวลาถึงปรับตามการขับรถและคิวหน้าด่าน",
       },
       {
-        time: "10:45",
-        id: "saisook",
-        label: "ไอศกรีมกับเรื่องราวสัตว์ป่า",
-        text: "เวลา 45 นาทีพอสำหรับแวะชิมและเดินดูร้าน",
+        time: "11:00",
+        id: "haewsuwat",
+        label: "ชมม่านน้ำตกเหวสุวัต",
+        text: "ขับต่อเข้าอุทยานและเดินจากลานจอดรถไปชมน้ำตก เผื่อเวลาเดินและถ่ายรูป งดลงเล่นน้ำตามข้อกำหนดอุทยาน",
       },
       {
-        time: "12:15",
+        time: "13:30",
         id: "yung",
         label: "มื้อกลางวันอาหารใต้",
         text: "เผื่อเวลากินข้าวแบบไม่รีบ แล้วกลับโรงแรมพักช่วงบ่าย",
       },
       {
-        time: "14:00",
+        time: "15:00",
         id: "atta",
         label: "บ่ายนี้ให้โรงแรม",
         text: "พักผ่อนแทนการเพิ่มคาเฟ่ และค่อยออกไปมื้อเย็น",

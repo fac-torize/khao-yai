@@ -14,7 +14,7 @@ Open the local URL printed by Next.js. Production: `bun run build` then `bun sta
 ## Features
 
 - Three daily itineraries with optional stops and space to rest.
-- All five restaurants and six cafés requested by the traveler.
+- All five restaurants and six cafés requested by the traveler, plus Km.30 viewpoint and Haew Suwat Waterfall. Day two visits the park in the morning; cafés remain rainy-day alternatives.
 - Venue photos with original-source attribution. Saalow links to the original gallery because its author forbids unapproved image reuse.
 - Google Maps embedded per venue with external navigation links. Map searches should be checked before driving.
 - Open-Meteo regional forecast refreshed on page load; timestamped saved data when the weather request fails. Dates outside the forecast window show no data.
@@ -36,6 +36,6 @@ Noto Sans Thai, self-hosted from Google Fonts. SIL Open Font License; see `publi
 
 ## Overview map and photo galleries
 
-The overview uses Leaflet with OpenStreetMap tiles and colors for each day. Marker labels show day.stop order; connectors indicate the suggested visit sequence, not road routing. Venue coordinates and evidence are recorded in `app/place-media.ts`. The atta coordinate was verified directly in Google Maps; the hotel's old short link points to Kirimaya instead. Saalow uses the shared The Creek campus marker, explicitly labeled; ambiguous Nam Pla Phrik remains unpinned. Mallorka appears as a day-two alternative.
+The overview uses Leaflet with OpenStreetMap tiles and colors for each day. Marker labels show day.stop order; connectors indicate the suggested visit sequence, not road routing. Venue coordinates and evidence are recorded in `app/place-media.ts`. The atta coordinate was verified directly in Google Maps; the hotel's old short link points to Kirimaya instead. Saalow uses the shared The Creek campus marker, explicitly labeled; ambiguous Nam Pla Phrik remains unpinned. Mallorka appears as a day-two rainy-day alternative. The Haew Suwat marker locates the waterfall itself, not its parking area.
 
-Each venue with reusable source imagery has three distinct photos, thumbnails, and a full-size keyboard-accessible gallery. Safari's additional pictures are drinks from its official website, labeled as such. Saalow still opens its author's original multi-photo gallery rather than copying prohibited images. Extra image origins remain in `public/places/image-origins.json`.
+The two park attractions each have two real photos from the official park website; restaurant, café, and hotel galleries have three distinct photos, thumbnails, and a full-size keyboard-accessible gallery. Safari's additional pictures are drinks from its official website, labeled as such. Saalow still opens its author's original multi-photo gallery rather than copying prohibited images. Extra image origins remain in `public/places/image-origins.json`.

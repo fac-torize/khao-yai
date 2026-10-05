@@ -2,7 +2,11 @@ import type { Place } from "./data";
 export type VenuePhoto = { file: string; caption: string; source: string };
 export const photosFor = (p: Place): VenuePhoto[] =>
   p.image
-    ? [
+    ? (p.kind === "sight" ? [1, 2].map((n) => ({
+        file: n === 1 ? p.image! : `${p.image}-${n}`,
+        caption: `${p.name} · ภาพจริงมุมที่ ${n} จากเว็บไซต์อุทยาน`,
+        source: p.source,
+      })) : [
         {
           file: p.image,
           caption: `${p.name} · ภาพจากแหล่งอ้างอิง`,
@@ -24,7 +28,7 @@ export const photosFor = (p: Place): VenuePhoto[] =>
               : `${p.name} · ภาพเพิ่มเติมจากแหล่งอ้างอิง`,
           source: p.photoSource || p.source,
         },
-      ]
+      ])
     : [];
 export type MapPosition = {
   lat: number;
@@ -33,6 +37,17 @@ export type MapPosition = {
   note?: string;
 };
 export const positions: Record<string, MapPosition> = {
+  viewpoint30: {
+    lat: 14.47386971808361,
+    lng: 101.39021683484316,
+    source: "https://www.wongnai.com/attractions/2057966Aw",
+  },
+  haewsuwat: {
+    lat: 14.43553,
+    lng: 101.41413,
+    source: "https://mapcarta.com/30566266",
+    note: "พิกัดตัวน้ำตกจาก OpenStreetMap ไม่ใช่ลานจอดรถ",
+  },
   atta: {
     lat: 14.5148993,
     lng: 101.4337163,

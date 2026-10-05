@@ -515,7 +515,7 @@ export default function Home() {
                                   ? "food"
                                   : p.kind === "stay"
                                     ? "bed"
-                                    : "coffee"
+                                    : p.kind === "sight" ? "pin" : "coffee"
                               }
                               size={15}
                             />
@@ -579,10 +579,10 @@ export default function Home() {
                       onClick={() => {
                         chooseView("places");
                         setFilter("cafe");
-                        setSearch("Mallorka");
+                        setSearch("");
                       }}
                     >
-                      ดู Mallorka แทนคาเฟ่ช่วงเช้า{" "}
+                      ดูคาเฟ่สำรอง หากเที่ยวอุทยานไม่ได้{" "}
                       <Icon name="arrow" size={16} />
                     </button>
                   </div>
@@ -622,7 +622,7 @@ export default function Home() {
               <div>
                 <h2>ทุกที่ที่อยากไป</h2>
                 <p className="muted">
-                  ร้านอาหาร 5 แห่ง และคาเฟ่ 6 แห่งจากลิสต์ของคุณ
+                  ร้านอาหาร 5 แห่ง คาเฟ่ 6 แห่ง และที่เที่ยวธรรมชาติ 2 จุด
                 </p>
               </div>
               <span>ภาพจริง พร้อมแหล่งอ้างอิง</span>
@@ -633,6 +633,7 @@ export default function Home() {
                   ["all", "ทั้งหมด"],
                   ["food", "ร้านอาหาร"],
                   ["cafe", "คาเฟ่"],
+                  ["sight", "ที่เที่ยว"],
                 ].map(([id, label]) => (
                   <button
                     key={id}
@@ -660,7 +661,7 @@ export default function Home() {
                   <div className="venue-gallery-wrap">
                     <VenueGallery place={p} />
                     <span className="venue-kind">
-                      {p.kind === "food" ? "ร้านอาหาร" : "คาเฟ่"}
+                      {p.kind === "food" ? "ร้านอาหาร" : p.kind === "sight" ? "ที่เที่ยว" : "คาเฟ่"}
                     </span>
                   </div>
                   <div className="venue-body">
@@ -712,7 +713,7 @@ export default function Home() {
                           ? "food"
                           : p.kind === "stay"
                             ? "bed"
-                            : "coffee"
+                            : p.kind === "sight" ? "pin" : "coffee"
                       }
                       size={18}
                     />
