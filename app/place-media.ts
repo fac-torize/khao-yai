@@ -42,12 +42,6 @@ export const positions: Record<string, MapPosition> = {
     lng: 101.39021683484316,
     source: "https://www.wongnai.com/attractions/2057966Aw",
   },
-  haewsuwat: {
-    lat: 14.43553,
-    lng: 101.41413,
-    source: "https://mapcarta.com/30566266",
-    note: "พิกัดตัวน้ำตกจาก OpenStreetMap ไม่ใช่ลานจอดรถ",
-  },
   atta: {
     lat: 14.5148993,
     lng: 101.4337163,

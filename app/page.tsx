@@ -11,6 +11,7 @@ const TripOverview = dynamic(() => import("./trip-overview"), {
 });
 import { days, places, getPlace, mapLink, getTripDays, type Place } from "./data";
 import { navigationLink, dayRouteLinks } from "./travel-links";
+import { customizeTrip, stopChoiceKey, type StopChoices } from "./trip-customization";
 import snapshot from "./weather-snapshot.json";
 
 function Icon({ name, size = 20 }: { name: string; size?: number }) {
@@ -278,17 +279,49 @@ export default function Home() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [rainy, setRainy] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [choices, setChoices] = useState<StopChoices>({});
+  const [choicesReady, setChoicesReady] = useState(false);
+  const [saveStatus, setSaveStatus] = useState("");
   useEffect(() => {
+    const frame = requestAnimationFrame(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("khao-yai-display-v1") || "{}");
       if (typeof saved.rainy === "boolean") setRainy(saved.rainy);
       if (typeof saved.compact === "boolean") setCompact(saved.compact);
     } catch { /* Display controls still work if storage is unavailable. */ }
+    try {
+      const savedChoices = JSON.parse(localStorage.getItem("khao-yai-stops-v1") || "{}");
+      if (savedChoices && typeof savedChoices === "object" && !Array.isArray(savedChoices)) {
+        setChoices(Object.fromEntries(Object.entries(savedChoices).filter(([, value]) =>
+          typeof value === "string" && places.some(place => place.id === value && place.kind !== "stay")
+        )) as StopChoices);
+      }
+    } catch { /* Invalid or unavailable storage falls back to the original plan. */ }
+    setChoicesReady(true);
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
   function saveDisplay(nextRainy: boolean, nextCompact: boolean) {
     try { localStorage.setItem("khao-yai-display-v1", JSON.stringify({ rainy: nextRainy, compact: nextCompact })); } catch {}
   }
-  const tripDays = getTripDays(rainy);
+  const baseDays = getTripDays(rainy);
+  const tripDays = customizeTrip(baseDays, choices);
+  function changeStop(index: number, id: string) {
+    const original = baseDays[day].stops[index];
+    const key = stopChoiceKey(baseDays[day].date, original);
+    const next = { ...choices };
+    if (id === original.id) delete next[key];
+    else next[key] = id;
+    setChoices(next);
+    setSelected(id);
+    setExpanded(null);
+    try {
+      localStorage.setItem("khao-yai-stops-v1", JSON.stringify(next));
+      setSaveStatus("บันทึกสถานที่ที่เลือกไว้ในเครื่องนี้แล้ว");
+    } catch {
+      setSaveStatus("เปลี่ยนสถานที่แล้ว แต่บันทึกในเครื่องไม่ได้ หากรีเฟรชจะกลับเป็นแผนเดิม");
+    }
+  }
   const current = tripDays[day];
   const routes = dayRouteLinks(current);
   const selectedPlace = getPlace(selected);
@@ -463,7 +496,7 @@ export default function Home() {
                     </button>
                   ))}
                 </div>
-                <small role="status">{rainy ? "Safari + ไทรสุกแทนอุทยาน · วันที่ 8 และ 10 ใช้แพลนเดิม" : "จุดชมวิว กม.30 + น้ำตกเหวสุวัต"}</small>
+                <small role="status">{rainy ? "Safari + ไทรสุกแทนอุทยาน · วันที่ 8 และ 10 ใช้แพลนเดิม" : "จุดชมวิว กม.30 → ยุ้งข้าว → พักที่โรงแรม"}</small>
               </div>
               {view === "plan" && <div className="control-group">
                 <span>การแสดงแพลน</span>
@@ -551,10 +584,13 @@ export default function Home() {
                   เวลาต่อไปนี้เป็นแพลนเสนอ
                   ไม่ใช่เวลาการจองหรือเวลาเดินทางที่ยืนยันแล้ว
                 </div>
+                <p className="trip-edit-hint">เปลี่ยนร้านหรือที่เที่ยวได้จากช่องเลือกแต่ละช่วง · ที่พักคงไว้ที่ atta</p>
+                <p className="trip-save-status" role="status">{saveStatus}</p>
                 <div className="timeline">
                   {current.stops.map((stop, i) => {
                     const p = getPlace(stop.id);
-                    const key = `${day}-${rainy}-${stop.id}-${i}`;
+                    const key = `${day}-${rainy}-${i}`;
+                    const original = baseDays[day].stops[i];
                     return (
                       <article
                         className={`stop ${stop.optional ? "optional" : ""}`}
@@ -586,6 +622,23 @@ export default function Home() {
                               )}
                             </div>
                             <h4>{p.name}</h4>
+                            {getPlace(original.id).kind !== "stay" && (
+                              <div className="stop-picker">
+                                <label htmlFor={`place-${key}`}>เปลี่ยนสถานที่</label>
+                                <select id={`place-${key}`} value={stop.id} disabled={!choicesReady}
+                                  aria-label={`เปลี่ยนสถานที่ วันที่ ${current.date} เวลา ${stop.time}`}
+                                  onChange={event => changeStop(i, event.target.value)}>
+                                  {([ ["food", "ร้านอาหาร"], ["cafe", "คาเฟ่"], ["sight", "ที่เที่ยว"] ] as const).map(([kind, label]) => (
+                                    <optgroup key={kind} label={label}>
+                                      {places.filter(place => place.kind === kind).map(place => (
+                                        <option key={place.id} value={place.id}>{place.name}{place.id === original.id ? " · แผนเดิม" : ""}</option>
+                                      ))}
+                                    </optgroup>
+                                  ))}
+                                </select>
+                                {stop.id !== original.id && <button type="button" onClick={() => changeStop(i, original.id)}>คืนค่าเดิม</button>}
+                              </div>
+                            )}
                             {(!compact || expanded === key) && <p>{stop.text}</p>}
                             <div className="stop-actions">
                               <a className="navigate-stop" href={navigationLink(p)} target="_blank" rel="noreferrer"
@@ -682,7 +735,7 @@ export default function Home() {
               <div>
                 <h2>ทุกที่ที่อยากไป</h2>
                 <p className="muted">
-                  ร้านอาหาร 5 แห่ง คาเฟ่ 6 แห่ง และที่เที่ยวธรรมชาติ 2 จุด
+                  ร้านอาหาร 5 แห่ง คาเฟ่ 6 แห่ง และที่เที่ยวธรรมชาติ 1 จุด
                 </p>
               </div>
               <span>ภาพจริง พร้อมแหล่งอ้างอิง</span>
